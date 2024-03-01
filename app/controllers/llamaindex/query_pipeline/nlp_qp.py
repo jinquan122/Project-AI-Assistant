@@ -52,7 +52,7 @@ similarity_cutoff = postprocessors_module.similarity_cutoff()
 response_synthesizer_module = ResponseSynthesizer()
 summarizer = response_synthesizer_module.refine_summarize()
 
-def init_agent() -> ReActAgent:
+def init_agent() -> OpenAIAgent:
     '''
     Initialize React Agent to answer questions about Data Science Natural Language Processing.
     Returns:
