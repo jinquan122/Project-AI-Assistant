@@ -16,20 +16,22 @@ from llama_index.core.tools import QueryEngineTool, ToolMetadata
 from llama_index.core.agent import ReActAgent
 from llama_index.agent.openai import OpenAIAgent
 from llama_index.core import get_response_synthesizer
+from llama_index.llms.groq import Groq
 
 
 # Initiate observability for the query pipeline
 observability_module = LLM_observability()
-observability_module.phoenix_observability()
+px = observability_module.phoenix_observability()
 
 # Define config parameters
 config = configReader()
-openai.api_key = config.get_apikey('openai')
+# openai.api_key = config.get_apikey('openai')
 
 # Initiate gemini as LLM in the query pipeline
-# llm_module = LLM()
-# llm = llm_module.gemini()
-llm = OpenAI(model=config.get_model(), temperature=0)
+llm_module = LLM()
+llm = llm_module.gemini()
+# llm = Groq(model="mixtral-8x7b-32768", api_key=config.get_apikey("groq"))
+# llm = OpenAI(model=config.get_model(), temperature=0)
 
 # Global set LLM and Embedding model
 Settings.llm = llm
@@ -52,7 +54,7 @@ similarity_cutoff = postprocessors_module.similarity_cutoff()
 response_synthesizer_module = ResponseSynthesizer()
 summarizer = response_synthesizer_module.refine_summarize()
 
-def init_agent() -> OpenAIAgent:
+def init_agent() -> RetrieverQueryEngine:
     '''
     Initialize React Agent to answer questions about Data Science Natural Language Processing.
     Returns:
@@ -63,22 +65,24 @@ def init_agent() -> OpenAIAgent:
         node_postprocessors=[reranker, similarity_cutoff],
         response_synthesizer=get_response_synthesizer(response_mode='compact'))
     
-    query_engine_tool = QueryEngineTool(
-        query_engine=query_engine,
-        metadata=ToolMetadata(
-            name="Data_Science_Natural_Language_Processing_knowledge_base",
-            description="Provides information about Data Science Natural Language Processing.",
-        ),
-    )
+    return query_engine
+    
+    # query_engine_tool = QueryEngineTool(
+    #     query_engine=query_engine,
+    #     metadata=ToolMetadata(
+    #         name="Data_Science_Natural_Language_Processing_knowledge_base",
+    #         description="Provides information about Data Science Natural Language Processing.",
+    #     ),
+    # )
 
-    return OpenAIAgent.from_tools(
-    [query_engine_tool],
-    llm=llm,
-    verbose=True,
-    system_prompt=system_prompt,
-    max_function_calls=3,
+    # return ReActAgent.from_tools(
+    # [query_engine_tool],
+    # llm=llm,
+    # verbose=True,
+    # # system_prompt=system_prompt,
+    # max_function_calls=3,
     # context=system_prompt
-    )
+    # )
 
 
 

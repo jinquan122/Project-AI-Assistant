@@ -22,7 +22,7 @@ def main():
     if uploaded_files:
         with st.spinner("Uploading files..."):
             for uploaded_file in uploaded_files:
-                pdf_ingest(uploaded_file.name)
+                pdf_ingest()
             st.success(f"File(s) uploaded successfully to Qdrant!")
         st.switch_page("./AI_Asistant.py")
     

@@ -1,5 +1,6 @@
 import streamlit as st
 from app.controllers.llamaindex.query_pipeline.nlp_qp import init_agent
+import time
 
 
 def main():
@@ -38,9 +39,14 @@ def main():
     # If last message is not from assistant, generate a new response
     if st.session_state.messages[-1]["role"] != "assistant":
         with st.chat_message("assistant"):
+            
             with st.spinner("Thinking..."):
                 # create streaming response from a response where response is a text
                 response = st.session_state.chat_engine.query(prompt)
+                st.session_state['response'] = response
+                with st.status("Authenticating...") as s:
+                    st.page_link("./pages/Nodes_Presentation.py")
+                    s.update(label="Retreived Nodes")
                 st.write(response.response)
                 message = {"role": "assistant", "content": response.response}
                 st.session_state.messages.append(message) # Add response to message history

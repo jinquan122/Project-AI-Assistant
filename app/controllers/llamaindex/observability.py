@@ -12,3 +12,4 @@ class LLM_observability:
         '''
         px.launch_app()
         llama_index.core.set_global_handler(self.phoenix)
+        return px

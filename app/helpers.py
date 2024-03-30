@@ -21,6 +21,8 @@ class configReader():
             apikey = self.config.get('openai', 'api_key')
         elif target == 'llamaparse':
             apikey = self.config.get('llamaparse', 'api_key')
+        elif target == 'groq':
+            apikey = self.config.get('groq', 'api_key')
         return apikey
     
     def get_url(self, target:str):

@@ -17,7 +17,6 @@ llm_module = LLM()
 llm = llm_module.gemini()
 
 def pdf_ingest(
-        file,
         embedding_model:HuggingFaceEmbedding = HuggingFaceEmbedding(config.get_embed_model())
         ) -> None:
     '''
